@@ -204,14 +204,23 @@ function loadFromType(): void {
         </label>
         <label>
           Width
-          <input
-            v-model.number="widthInput"
-            type="number"
-            min="1"
-            :max="MAX_GRID_WIDTH"
-            @keydown="onKeyDown"
-            @blur="applySize"
-          />
+          <div class="width-row">
+            <input
+              v-model.number="widthInput"
+              type="number"
+              min="1"
+              :max="MAX_GRID_WIDTH"
+              @keydown="onKeyDown"
+              @blur="applySize"
+            />
+            <button
+              class="btn-square"
+              title="Set width = height (square grid)"
+              @click="widthInput = heightInput; applySize()"
+            >
+              n×n
+            </button>
+          </div>
         </label>
       </div>
       <div class="actions">
@@ -361,6 +370,38 @@ input[type='number'] {
 input[type='number']:focus {
   border-color: rgba(122, 162, 255, 0.7);
   box-shadow: 0 0 0 3px rgba(122, 162, 255, 0.18);
+}
+
+.width-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.width-row input[type='number'] {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-square {
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.btn-square:hover {
+  background: rgba(122, 162, 255, 0.15);
+  color: var(--text);
+  border-color: rgba(122, 162, 255, 0.3);
 }
 
 .width-hint {
