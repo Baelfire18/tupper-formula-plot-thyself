@@ -75,7 +75,7 @@ export function useTupper() {
         result.computed = true
         result.N = bigN
         result.k = k
-        result.decodedGrid = gridState.grid.value.map(row => [...row])
+        result.decodedGrid = gridState.grid.value.map((row) => [...row])
         result.bbox = bbox
         result.quadrant = q.quadrant
         result.center = q.center

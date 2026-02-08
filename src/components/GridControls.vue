@@ -66,7 +66,10 @@ function loadFromText(): void {
     return
   }
 
-  const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0)
+  const lines = raw
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0)
   if (lines.length === 0) {
     textError.value = 'Could not find any rows. Use one row per line with 1s and 0s.'
     return
@@ -78,11 +81,14 @@ function loadFromText(): void {
     let cells: number[]
 
     if (line.includes(',')) {
-      cells = line.split(',').map(v => v.trim()).map(v => (v === '1' ? 1 : 0))
+      cells = line
+        .split(',')
+        .map((v) => v.trim())
+        .map((v) => (v === '1' ? 1 : 0))
     } else if (line.includes(' ')) {
-      cells = line.split(/\s+/).map(v => (v === '1' ? 1 : 0))
+      cells = line.split(/\s+/).map((v) => (v === '1' ? 1 : 0))
     } else {
-      cells = line.split('').map(ch => (ch === '1' ? 1 : 0))
+      cells = line.split('').map((ch) => (ch === '1' ? 1 : 0))
     }
 
     if (cells.length === 0) {
@@ -221,16 +227,15 @@ function loadFromType(): void {
         placeholder="Paste a k value here..."
         class="import-textarea mono"
       />
-      <button class="btn-decode" @click="decodeImport">
-        Load into editor
-      </button>
+      <button class="btn-decode" @click="decodeImport">Load into editor</button>
       <div v-if="importError" class="error-msg">{{ importError }}</div>
     </div>
 
     <!-- Type mode -->
     <div v-if="mode === InputMode.Type" class="tab-content">
       <p class="text-hint">
-        Type any text and it will be rendered as <strong>pixel art</strong> using a built-in 5×7 font. Size is auto-calculated.
+        Type any text and it will be rendered as <strong>pixel art</strong> using a built-in 5×7
+        font. Size is auto-calculated.
       </p>
       <input
         v-model="typeInput"
@@ -239,17 +244,16 @@ function loadFromType(): void {
         class="type-input"
         @keydown.enter="loadFromType"
       />
-      <button class="btn-decode" @click="loadFromType">
-        Load into editor
-      </button>
+      <button class="btn-decode" @click="loadFromType">Load into editor</button>
       <div v-if="typeError" class="error-msg">{{ typeError }}</div>
     </div>
 
     <!-- Text mode -->
     <div v-if="mode === InputMode.Text" class="tab-content">
       <p class="text-hint">
-        Paste rows of <strong>1</strong>s and <strong>0</strong>s. One row per line.
-        Supports: <code>1,0,1</code> or <code>1 0 1</code> or <code>101</code>. Height and width are detected automatically.
+        Paste rows of <strong>1</strong>s and <strong>0</strong>s. One row per line. Supports:
+        <code>1,0,1</code> or <code>1 0 1</code> or <code>101</code>. Height and width are detected
+        automatically.
       </p>
       <textarea
         v-model="textInput"
@@ -261,9 +265,7 @@ function loadFromType(): void {
 0,0,1,1,1,1,0,0"
         class="import-textarea mono"
       />
-      <button class="btn-decode" @click="loadFromText">
-        Load into editor
-      </button>
+      <button class="btn-decode" @click="loadFromText">Load into editor</button>
       <div v-if="textError" class="error-msg">{{ textError }}</div>
     </div>
   </div>
@@ -331,7 +333,7 @@ label {
   gap: 5px;
 }
 
-input[type="number"] {
+input[type='number'] {
   width: 100px;
   padding: 8px 10px;
   border-radius: 10px;
@@ -343,7 +345,7 @@ input[type="number"] {
   font-family: var(--font-mono);
 }
 
-input[type="number"]:focus {
+input[type='number']:focus {
   border-color: rgba(122, 162, 255, 0.7);
   box-shadow: 0 0 0 3px rgba(122, 162, 255, 0.18);
 }

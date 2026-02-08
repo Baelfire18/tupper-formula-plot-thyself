@@ -9,7 +9,7 @@ let animFrame: number | null = null
 let animStep = 0
 
 // Use the smiley template rather than hardcoding
-const smileyTemplate = GRID_TEMPLATES.find(t => t.id === 'smiley')
+const smileyTemplate = GRID_TEMPLATES.find((t) => t.id === 'smiley')
 const smiley = smileyTemplate?.grid ?? []
 
 function drawDemo(): void {
@@ -85,9 +85,9 @@ onBeforeUnmount(() => {
             <span class="accent">Formula Explorer</span>
           </h1>
           <p class="subtitle">
-            Discover the remarkable formula that can plot <em>itself</em>. Draw any bitmap,
-            compute its unique <strong>k</strong> value, and decode it back — all in your browser
-            using JavaScript BigInt.
+            Discover the remarkable formula that can plot <em>itself</em>. Draw any bitmap, compute
+            its unique <strong>k</strong> value, and decode it back — all in your browser using
+            JavaScript BigInt.
           </p>
           <div class="hero-actions">
             <router-link to="/playground" class="cta-btn">
@@ -141,21 +141,30 @@ onBeforeUnmount(() => {
             <div class="step-number">1</div>
             <div class="step-icon">🎨</div>
             <h3>Draw Your Bitmap</h3>
-            <p>Click and drag on the grid editor to create any pixel pattern you like, or choose from pre-built templates.</p>
+            <p>
+              Click and drag on the grid editor to create any pixel pattern you like, or choose from
+              pre-built templates.
+            </p>
           </div>
           <div class="step-arrow">→</div>
           <div class="step">
             <div class="step-number">2</div>
             <div class="step-icon">🔢</div>
             <h3>Encode to k</h3>
-            <p>Your bitmap is packed column-by-column into a single huge integer <strong>N</strong>, then <code>k = n × N</code> gives the exact y-offset.</p>
+            <p>
+              Your bitmap is packed column-by-column into a single huge integer <strong>N</strong>,
+              then <code>k = n × N</code> gives the exact y-offset.
+            </p>
           </div>
           <div class="step-arrow">→</div>
           <div class="step">
             <div class="step-number">3</div>
             <div class="step-icon">📊</div>
             <h3>Decode &amp; Plot</h3>
-            <p>Feed k back into the formula. The plotted region <code>k ≤ y &lt; k + n</code> reproduces your original drawing with exact coordinates.</p>
+            <p>
+              Feed k back into the formula. The plotted region
+              <code>k ≤ y &lt; k + n</code> reproduces your original drawing with exact coordinates.
+            </p>
           </div>
         </div>
       </div>
@@ -189,22 +198,34 @@ onBeforeUnmount(() => {
           <div class="fact-card">
             <div class="fact-icon">🎯</div>
             <h3>Universal Bitmap Decoder</h3>
-            <p>The formula isn't special — it can plot <em>any</em> 106×17 bitmap. The "magic" is choosing the right k value.</p>
+            <p>
+              The formula isn't special — it can plot <em>any</em> 106×17 bitmap. The "magic" is
+              choosing the right k value.
+            </p>
           </div>
           <div class="fact-card">
             <div class="fact-icon">📏</div>
             <h3>543-Digit Number</h3>
-            <p>The classic self-referential k value is a 543-digit integer that encodes an image of the formula itself.</p>
+            <p>
+              The classic self-referential k value is a 543-digit integer that encodes an image of
+              the formula itself.
+            </p>
           </div>
           <div class="fact-card">
             <div class="fact-icon">🧮</div>
             <h3>Generalized Heights</h3>
-            <p>While Tupper used n=17, the formula works for any height n. This explorer lets you use heights from 1 to 60.</p>
+            <p>
+              While Tupper used n=17, the formula works for any height n. This explorer lets you use
+              heights from 1 to 60.
+            </p>
           </div>
           <div class="fact-card">
             <div class="fact-icon">📅</div>
             <h3>Published in 2001</h3>
-            <p>Jeff Tupper presented this formula at SIGGRAPH 2001 in his paper "Reliable Two-Dimensional Graphing Methods."</p>
+            <p>
+              Jeff Tupper presented this formula at SIGGRAPH 2001 in his paper "Reliable
+              Two-Dimensional Graphing Methods."
+            </p>
           </div>
         </div>
       </div>
@@ -227,11 +248,7 @@ onBeforeUnmount(() => {
 /* Hero */
 .hero {
   padding: 60px 20px 80px;
-  background: linear-gradient(
-    180deg,
-    rgba(122, 162, 255, 0.06) 0%,
-    rgba(11, 16, 32, 0) 100%
-  );
+  background: linear-gradient(180deg, rgba(122, 162, 255, 0.06) 0%, rgba(11, 16, 32, 0) 100%);
 }
 
 .hero-content {

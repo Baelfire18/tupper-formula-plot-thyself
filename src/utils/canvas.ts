@@ -13,10 +13,7 @@ export function computeCellSize(
 ): number {
   return Math.max(
     CELL_SIZE_MIN,
-    Math.min(
-      CELL_SIZE_MAX,
-      Math.floor(Math.min(availWidth / cols, availHeight / rows)),
-    ),
+    Math.min(CELL_SIZE_MAX, Math.floor(Math.min(availWidth / cols, availHeight / rows))),
   )
 }
 

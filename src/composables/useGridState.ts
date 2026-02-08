@@ -62,7 +62,7 @@ function gridFromBuffer(h: number, w: number): Grid {
 function resetBuffer(h: number, w: number, source: Grid): void {
   bufferH = h
   bufferW = w
-  buffer = source.map(row => [...row])
+  buffer = source.map((row) => [...row])
 }
 
 // ============================================
@@ -92,7 +92,7 @@ export function useGridState() {
     const w = templateGrid[0].length
     gridHeight.value = n
     gridWidth.value = w
-    grid.value = templateGrid.map(row => [...row])
+    grid.value = templateGrid.map((row) => [...row])
     resetBuffer(n, w, grid.value)
     gridVersion.value++
   }

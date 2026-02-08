@@ -1,116 +1,106 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useTupper } from "../composables/useTupper";
-import { formatBigInt, formatBigIntFull } from "../utils/format";
-import { downloadBlob, downloadCanvasAsPng } from "../utils/export";
+import { ref, computed } from 'vue'
+import { useTupper } from '../composables/useTupper'
+import { formatBigInt, formatBigIntFull } from '../utils/format'
+import { downloadBlob, downloadCanvasAsPng } from '../utils/export'
 
-const tupper = useTupper();
-const copied = ref(false);
-const copiedN = ref(false);
-const copiedW = ref(false);
+const tupper = useTupper()
+const copied = ref(false)
+const copiedN = ref(false)
+const copiedW = ref(false)
 
 const kFull = computed(() => {
-  if (!tupper.result.computed || tupper.result.k === null) return "—";
-  return formatBigIntFull(tupper.result.k);
-});
+  if (!tupper.result.computed || tupper.result.k === null) return '—'
+  return formatBigIntFull(tupper.result.k)
+})
 
 const kAbbr = computed(() => {
-  if (!tupper.result.computed || tupper.result.k === null) return "—";
-  return formatBigInt(tupper.result.k);
-});
+  if (!tupper.result.computed || tupper.result.k === null) return '—'
+  return formatBigInt(tupper.result.k)
+})
 
 const nAbbr = computed(() => {
-  if (!tupper.result.computed || tupper.result.N === null) return "—";
-  return formatBigInt(tupper.result.N);
-});
+  if (!tupper.result.computed || tupper.result.N === null) return '—'
+  return formatBigInt(tupper.result.N)
+})
 
 const yRange = computed(() => {
-  if (!tupper.result.computed || tupper.result.k === null) return "—";
-  const k = tupper.result.k;
-  const n = tupper.gridHeight.value;
-  return `[${formatBigInt(k)},  ${formatBigInt(k + BigInt(n))})`;
-});
+  if (!tupper.result.computed || tupper.result.k === null) return '—'
+  const k = tupper.result.k
+  const n = tupper.gridHeight.value
+  return `[${formatBigInt(k)},  ${formatBigInt(k + BigInt(n))})`
+})
 
 const bboxStr = computed(() => {
-  if (!tupper.result.computed) return "—";
-  const b = tupper.result.bbox;
-  if (!b) return "EMPTY";
-  return `(${b.xMin}, ${b.yMin}, ${b.xMax}, ${b.yMax})`;
-});
+  if (!tupper.result.computed) return '—'
+  const b = tupper.result.bbox
+  if (!b) return 'EMPTY'
+  return `(${b.xMin}, ${b.yMin}, ${b.xMax}, ${b.yMax})`
+})
 
 const centerStr = computed(() => {
-  if (!tupper.result.computed) return "—";
-  const c = tupper.result.center;
-  if (!c) return "—";
-  return `(${c.x.toFixed(2)}, ${c.y.toFixed(2)})`;
-});
+  if (!tupper.result.computed) return '—'
+  const c = tupper.result.center
+  if (!c) return '—'
+  return `(${c.x.toFixed(2)}, ${c.y.toFixed(2)})`
+})
 
-const onCells = computed(() => tupper.countOnCells());
+const onCells = computed(() => tupper.countOnCells())
 
-const totalCells = computed(
-  () => tupper.gridHeight.value * tupper.gridWidth.value,
-);
+const totalCells = computed(() => tupper.gridHeight.value * tupper.gridWidth.value)
 
 async function writeToClipboard(text: string): Promise<void> {
   try {
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(text)
   } catch {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
+    const ta = document.createElement('textarea')
+    ta.value = text
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
   }
 }
 
 async function copyK(): Promise<void> {
-  if (!tupper.result.computed || tupper.result.k === null) return;
-  await writeToClipboard(tupper.result.k.toString());
-  copied.value = true;
+  if (!tupper.result.computed || tupper.result.k === null) return
+  await writeToClipboard(tupper.result.k.toString())
+  copied.value = true
   setTimeout(() => {
-    copied.value = false;
-  }, 2000);
+    copied.value = false
+  }, 2000)
 }
 
 async function copyN(): Promise<void> {
-  await writeToClipboard(tupper.gridHeight.value.toString());
-  copiedN.value = true;
+  await writeToClipboard(tupper.gridHeight.value.toString())
+  copiedN.value = true
   setTimeout(() => {
-    copiedN.value = false;
-  }, 2000);
+    copiedN.value = false
+  }, 2000)
 }
 
 async function copyW(): Promise<void> {
-  await writeToClipboard(tupper.gridWidth.value.toString());
-  copiedW.value = true;
+  await writeToClipboard(tupper.gridWidth.value.toString())
+  copiedW.value = true
   setTimeout(() => {
-    copiedW.value = false;
-  }, 2000);
+    copiedW.value = false
+  }, 2000)
 }
 
 function downloadPNG(): void {
-  const canvas = document.querySelector(
-    ".decoded-preview canvas",
-  ) as HTMLCanvasElement | null;
-  if (!canvas) return;
-  downloadCanvasAsPng(canvas, `tupper-k-${Date.now()}.png`);
+  const canvas = document.querySelector('.decoded-preview canvas') as HTMLCanvasElement | null
+  if (!canvas) return
+  downloadCanvasAsPng(canvas, `tupper-k-${Date.now()}.png`)
 }
 
 function downloadSVG(): void {
-  const svg = tupper.exportAsSvg();
-  downloadBlob(
-    new Blob([svg], { type: "image/svg+xml" }),
-    `tupper-k-${Date.now()}.svg`,
-  );
+  const svg = tupper.exportAsSvg()
+  downloadBlob(new Blob([svg], { type: 'image/svg+xml' }), `tupper-k-${Date.now()}.svg`)
 }
 
 function downloadTXT(): void {
-  const txt = tupper.exportAsTxt();
-  downloadBlob(
-    new Blob([txt], { type: "text/plain" }),
-    `tupper-k-${Date.now()}.txt`,
-  );
+  const txt = tupper.exportAsTxt()
+  downloadBlob(new Blob([txt], { type: 'text/plain' }), `tupper-k-${Date.now()}.txt`)
 }
 </script>
 
@@ -131,60 +121,47 @@ function downloadTXT(): void {
         <div class="k has-tip">
           N (packed)
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip"
-            >Your bitmap as one big integer. Each pixel = one bit, packed
-            column-by-column, bottom to top.</span
-          >
+          <span class="tooltip">Your bitmap as one big integer. Each pixel = one bit, packed column-by-column, bottom
+            to top.</span>
         </div>
         <div class="v mono">{{ nAbbr }}</div>
 
         <div class="k has-tip">
           k = n · N
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip"
-            >The y-axis position where the formula reproduces your drawing. This
-            is the number that makes Tupper's formula "plot" your bitmap.</span
-          >
+          <span class="tooltip">The y-axis position where the formula reproduces your drawing. This is the number that
+            makes Tupper's formula "plot" your bitmap.</span>
         </div>
         <div class="v mono">{{ kAbbr }}</div>
 
         <div class="k has-tip">
           y-range
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip"
-            >The vertical strip [k, k+n) on the y-axis. Graph the formula over
-            this range to see your bitmap.</span
-          >
+          <span class="tooltip">The vertical strip [k, k+n) on the y-axis. Graph the formula over this range to see
+            your bitmap.</span>
         </div>
         <div class="v mono">{{ yRange }}</div>
 
         <div class="k has-tip">
           bbox
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip"
-            >Bounding box (xMin, yMin, xMax, yMax) — the tightest rectangle
-            around all "on" pixels, in bottom-origin coords.</span
-          >
+          <span class="tooltip">Bounding box (xMin, yMin, xMax, yMax) — the tightest rectangle around all "on" pixels,
+            in bottom-origin coords.</span>
         </div>
         <div class="v mono">{{ bboxStr }}</div>
 
         <div class="k has-tip">
           center
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip"
-            >Center point (x, y) of the bounding box — the middle of your
-            drawing within the grid.</span
-          >
+          <span class="tooltip">Center point (x, y) of the bounding box — the middle of your drawing within the
+            grid.</span>
         </div>
         <div class="v mono">{{ centerStr }}</div>
 
         <div class="k has-tip">
           quadrant
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip"
-            >Which area of the grid the drawing is concentrated in, based on its
-            center point.</span
-          >
+          <span class="tooltip">Which area of the grid the drawing is concentrated in, based on its center point.</span>
         </div>
         <div class="v mono">{{ tupper.result.quadrant }}</div>
       </div>
@@ -194,13 +171,13 @@ function downloadTXT(): void {
         <h3>Export</h3>
         <div class="action-row">
           <button class="btn-action" @click="copyK">
-            {{ copied ? "✓ Copied!" : "Copy k" }}
+            {{ copied ? '✓ Copied!' : 'Copy k' }}
           </button>
           <button class="btn-action" @click="copyN">
-            {{ copiedN ? "✓ Copied!" : `Copy n (${tupper.gridHeight.value})` }}
+            {{ copiedN ? '✓ Copied!' : `Copy n (${tupper.gridHeight.value})` }}
           </button>
           <button class="btn-action" @click="copyW">
-            {{ copiedW ? "✓ Copied!" : `Copy w (${tupper.gridWidth.value})` }}
+            {{ copiedW ? '✓ Copied!' : `Copy w (${tupper.gridWidth.value})` }}
           </button>
           <button class="btn-action" @click="downloadPNG">PNG</button>
           <button class="btn-action" @click="downloadSVG">SVG</button>
@@ -211,11 +188,7 @@ function downloadTXT(): void {
       <div class="k-full-section" v-if="kFull.length > 30">
         <div class="k-full-label">
           Full k value
-          <span class="k-full-params mono"
-            >Decode with (n={{ tupper.gridHeight }}, w={{
-              tupper.gridWidth
-            }})</span
-          >
+          <span class="k-full-params mono">Decode with (n={{ tupper.gridHeight }}, w={{ tupper.gridWidth }})</span>
         </div>
         <div class="k-full-value mono">{{ kFull }}</div>
       </div>
@@ -223,8 +196,8 @@ function downloadTXT(): void {
 
     <div v-else class="empty-state">
       <p>
-        Draw something in the editor, then click <strong>Plot It!</strong> to
-        encode and see the results.
+        Draw something in the editor, then click <strong>Plot It!</strong> to encode and see the
+        results.
       </p>
     </div>
   </div>
@@ -331,8 +304,8 @@ h3 {
   pointer-events: none;
 }
 
-.tip-icon:hover + .tooltip,
-.tip-icon:focus + .tooltip {
+.tip-icon:hover+.tooltip,
+.tip-icon:focus+.tooltip {
   display: block;
 }
 

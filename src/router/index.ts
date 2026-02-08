@@ -6,13 +6,13 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'landing',
-    component: LandingView
+    component: LandingView,
   },
   {
     path: '/playground',
     name: 'playground',
-    component: () => import('../views/PlaygroundView.vue')
-  }
+    component: () => import('../views/PlaygroundView.vue'),
+  },
 ]
 
 export default createRouter({
@@ -20,5 +20,5 @@ export default createRouter({
   routes,
   scrollBehavior() {
     return { top: 0 }
-  }
+  },
 })

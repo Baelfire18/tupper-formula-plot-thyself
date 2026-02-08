@@ -6,7 +6,7 @@ import { SVG_CELL_SIZE } from '../constants/grid'
  * Convert a grid to a TXT string (rows of comma-separated 1s and 0s).
  */
 export function gridToTxt(grid: Grid): string {
-  return grid.map(row => row.join(',')).join('\n')
+  return grid.map((row) => row.join(',')).join('\n')
 }
 
 /**
