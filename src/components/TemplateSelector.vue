@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import type { GridTemplate } from '../types'
 import { useTupper } from '../composables/useTupper'
-import { TEMPLATES, TUPPER_FORMULA, EULER_IDENTITY } from '../data/templates'
-import type { TemplateItem } from '../data/templates'
+import { GRID_TEMPLATES, TUPPER_FORMULA, EULER_IDENTITY } from '../data/templates'
 
 const tupper = useTupper()
 
-function loadTemplate(template: TemplateItem): void {
+function loadTemplate(template: GridTemplate): void {
   tupper.loadTemplate(template.grid)
 }
 
@@ -23,7 +23,7 @@ function loadEulerIdentity(): void {
     <h2>Templates</h2>
     <div class="template-grid">
       <button
-        v-for="t in TEMPLATES"
+        v-for="t in GRID_TEMPLATES"
         :key="t.id"
         class="template-btn"
         :title="t.name"

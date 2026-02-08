@@ -1,24 +1,14 @@
-export interface TemplateItem {
-  id: string;
-  name: string;
-  icon: string;
-  grid: number[][];
-}
+import type { GridTemplate, FormulaTemplate } from '../types'
 
-export interface TupperFormulaItem {
-  id: string;
-  name: string;
-  icon: string;
-  n: number;
-  w: number;
-  k: string;
-}
+// ============================================
+// Predefined bitmap templates
+// ============================================
 
-export const TEMPLATES: TemplateItem[] = [
+export const GRID_TEMPLATES: GridTemplate[] = [
   {
-    id: "smiley",
-    name: "Smiley",
-    icon: "😊",
+    id: 'smiley',
+    name: 'Smiley',
+    icon: '😊',
     grid: [
       [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
       [0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
@@ -33,9 +23,9 @@ export const TEMPLATES: TemplateItem[] = [
     ],
   },
   {
-    id: "slight-smile",
-    name: "Smile",
-    icon: "🙂",
+    id: 'slight-smile',
+    name: 'Smile',
+    icon: '🙂',
     grid: [
       [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
       [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
@@ -50,9 +40,9 @@ export const TEMPLATES: TemplateItem[] = [
     ],
   },
   {
-    id: "heart",
-    name: "Heart",
-    icon: "❤️",
+    id: 'heart',
+    name: 'Heart',
+    icon: '❤️',
     grid: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
@@ -67,9 +57,9 @@ export const TEMPLATES: TemplateItem[] = [
     ],
   },
   {
-    id: "invader",
-    name: "Invader",
-    icon: "👾",
+    id: 'invader',
+    name: 'Invader',
+    icon: '👾',
     grid: [
       [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
       [0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
@@ -84,9 +74,9 @@ export const TEMPLATES: TemplateItem[] = [
     ],
   },
   {
-    id: "arrow",
-    name: "Arrow",
-    icon: "➡",
+    id: 'arrow',
+    name: 'Arrow',
+    icon: '➡',
     grid: [
       [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
@@ -101,9 +91,9 @@ export const TEMPLATES: TemplateItem[] = [
     ],
   },
   {
-    id: "check",
-    name: "Check",
-    icon: "✓",
+    id: 'check',
+    name: 'Check',
+    icon: '✓',
     grid: [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
@@ -118,9 +108,9 @@ export const TEMPLATES: TemplateItem[] = [
     ],
   },
   {
-    id: "star",
-    name: "Star",
-    icon: "⭐",
+    id: 'star',
+    name: 'Star',
+    icon: '⭐',
     grid: [
       [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
       [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
@@ -134,26 +124,28 @@ export const TEMPLATES: TemplateItem[] = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ],
   },
-];
+]
 
-// The famous Tupper's self-referential formula k value.
-// When decoded with n=17, w=106, it renders the formula itself.
-export const TUPPER_FORMULA: TupperFormulaItem = {
-  id: "tupper",
+// ============================================
+// Famous formula k-value templates
+// ============================================
+
+/** The classic Tupper self-referential formula (106x17) */
+export const TUPPER_FORMULA: FormulaTemplate = {
+  id: 'tupper',
   name: "Tupper's Formula",
-  icon: "f(x)",
+  icon: 'f(x)',
   n: 17,
   w: 106,
-  k: "4858450636189713423582095962494202044581400587983244549483093085061934704708809928450644769865524364849997247024915119110411605739177407856919754326571855442057210445735883681829823754139634338225199452191651284348332905131193199953502413758765239264874613394906870130562295813219481113685339535565290850023875092856892694555974281546386510730049106723058933586052544096664351265349363643957125565695936815184334857605266940161251266951421550539554519153785457525756590740540157929001765967965480064427829131488548259914721248506352686630476300",
-};
+  k: '4858450636189713423582095962494202044581400587983244549483093085061934704708809928450644769865524364849997247024915119110411605739177407856919754326571855442057210445735883681829823754139634338225199452191651284348332905131193199953502413758765239264874613394906870130562295813219481113685339535565290850023875092856892694555974281546386510730049106723058933586052544096664351265349363643957125565695936815184334857605266940161251266951421550539554519153785457525756590740540157929001765967965480064427829131488548259914721248506352686630476300',
+}
 
-// Euler's identity: e^(iπ) + 1 = 0
-// When decoded with n=17, w=106, it renders Euler's identity formula.
-export const EULER_IDENTITY: TupperFormulaItem = {
-  id: "euler",
+/** Euler's identity: e^(ipi) + 1 = 0  (55x17) */
+export const EULER_IDENTITY: FormulaTemplate = {
+  id: 'euler',
   name: "Euler's Identity",
-  icon: "e^(iπ)",
+  icon: 'e^(iπ)',
   n: 17,
   w: 55,
-  k: "2352035939949658122140829649197960929306974813625028263292934781954073595495544614140648457342461564887325223455620804204796011434955111022376601635853210476633318991990462192687999109308209472315419713652238185967518731354596984676698288025582563654632501009155760415054499960",
-};
+  k: '2352035939949658122140829649197960929306974813625028263292934781954073595495544614140648457342461564887325223455620804204796011434955111022376601635853210476633318991990462192687999109308209472315419713652238185967518731354596984676698288025582563654632501009155760415054499960',
+}

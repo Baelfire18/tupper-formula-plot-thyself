@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { InputMode } from '../types'
+import { MAX_GRID_HEIGHT, MAX_GRID_WIDTH } from '../constants/grid'
 import { useTupper } from '../composables/useTupper'
 import { renderTextToGrid } from '../data/pixelfont'
 
@@ -7,21 +9,21 @@ const tupper = useTupper()
 const heightInput = ref<number>(tupper.gridHeight.value)
 const widthInput = ref<number>(tupper.gridWidth.value)
 
-const mode = ref<'draw' | 'import' | 'text' | 'type'>('draw')
+const mode = ref<InputMode>(InputMode.Draw)
 
 // Import k state
-const importK = ref<string>('')
-const importN = ref<number>(17)
-const importW = ref<number>(106)
-const importError = ref<string>('')
+const importK = ref('')
+const importN = ref(17)
+const importW = ref(106)
+const importError = ref('')
 
 // Text import state
-const textInput = ref<string>('')
-const textError = ref<string>('')
+const textInput = ref('')
+const textError = ref('')
 
 // Type text state
-const typeInput = ref<string>('')
-const typeError = ref<string>('')
+const typeInput = ref('')
+const typeError = ref('')
 
 watch([() => tupper.gridHeight.value, () => tupper.gridWidth.value], ([h, w]) => {
   heightInput.value = h
@@ -29,8 +31,8 @@ watch([() => tupper.gridHeight.value, () => tupper.gridWidth.value], ([h, w]) =>
 })
 
 function applySize(): void {
-  const h = Math.max(1, Math.min(60, Number(heightInput.value) || 10))
-  const w = Math.max(1, Math.min(200, Number(widthInput.value) || 10))
+  const h = Math.max(1, Math.min(MAX_GRID_HEIGHT, Number(heightInput.value) || 10))
+  const w = Math.max(1, Math.min(MAX_GRID_WIDTH, Number(widthInput.value) || 10))
   heightInput.value = h
   widthInput.value = w
   tupper.setGridSize(h, w)
@@ -46,8 +48,8 @@ function decodeImport(): void {
     importError.value = 'Please enter a k value'
     return
   }
-  const n = Math.max(1, Math.min(60, Number(importN.value) || 17))
-  const w = Math.max(1, Math.min(200, Number(importW.value) || 106))
+  const n = Math.max(1, Math.min(MAX_GRID_HEIGHT, Number(importN.value) || 17))
+  const w = Math.max(1, Math.min(MAX_GRID_WIDTH, Number(importW.value) || 106))
   const ok = tupper.loadFromK(importK.value, n, w)
   if (!ok) {
     importError.value = 'Invalid k value. Must be a valid integer.'
@@ -64,27 +66,22 @@ function loadFromText(): void {
     return
   }
 
-  // Split into lines, ignore empty lines
   const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0)
   if (lines.length === 0) {
     textError.value = 'Could not find any rows. Use one row per line with 1s and 0s.'
     return
   }
 
-  // Parse each line: support "1,0,1,0" or "1 0 1 0" or "1010"
   const parsed: number[][] = []
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     let cells: number[]
 
     if (line.includes(',')) {
-      // comma-separated
       cells = line.split(',').map(v => v.trim()).map(v => (v === '1' ? 1 : 0))
     } else if (line.includes(' ')) {
-      // space-separated
       cells = line.split(/\s+/).map(v => (v === '1' ? 1 : 0))
     } else {
-      // raw string of digits "10110..."
       cells = line.split('').map(ch => (ch === '1' ? 1 : 0))
     }
 
@@ -95,7 +92,6 @@ function loadFromText(): void {
     parsed.push(cells)
   }
 
-  // Validate: all rows must have the same width
   const w = parsed[0].length
   for (let i = 1; i < parsed.length; i++) {
     if (parsed[i].length !== w) {
@@ -105,18 +101,15 @@ function loadFromText(): void {
   }
 
   const h = parsed.length
-
-  // Validate limits
-  if (h > 60) {
-    textError.value = `Too many rows (${h}). Maximum height is 60.`
+  if (h > MAX_GRID_HEIGHT) {
+    textError.value = `Too many rows (${h}). Maximum height is ${MAX_GRID_HEIGHT}.`
     return
   }
-  if (w > 200) {
-    textError.value = `Too many columns (${w}). Maximum width is 200.`
+  if (w > MAX_GRID_WIDTH) {
+    textError.value = `Too many columns (${w}). Maximum width is ${MAX_GRID_WIDTH}.`
     return
   }
 
-  // Load it
   tupper.loadTemplate(parsed)
   textError.value = ''
 }
@@ -130,12 +123,12 @@ function loadFromType(): void {
 
   const result = renderTextToGrid(typeInput.value)
 
-  if (result.height > 60) {
-    typeError.value = `The rendered text is too tall (${result.height} rows). Maximum is 60.`
+  if (result.height > MAX_GRID_HEIGHT) {
+    typeError.value = `The rendered text is too tall (${result.height} rows). Maximum is ${MAX_GRID_HEIGHT}.`
     return
   }
-  if (result.width > 200) {
-    typeError.value = `"${typeInput.value}" is too long — it needs ${result.width} columns but the max is 200. Try shorter text.`
+  if (result.width > MAX_GRID_WIDTH) {
+    typeError.value = `"${typeInput.value}" is too long — it needs ${result.width} columns but the max is ${MAX_GRID_WIDTH}. Try shorter text.`
     return
   }
 
@@ -150,36 +143,36 @@ function loadFromType(): void {
     <div class="tab-bar">
       <button
         class="tab"
-        :class="{ active: mode === 'draw' }"
-        @click="mode = 'draw'"
+        :class="{ active: mode === InputMode.Draw }"
+        @click="mode = InputMode.Draw"
       >
         Draw
       </button>
       <button
         class="tab"
-        :class="{ active: mode === 'import' }"
-        @click="mode = 'import'"
+        :class="{ active: mode === InputMode.Import }"
+        @click="mode = InputMode.Import"
       >
         Import k
       </button>
       <button
         class="tab"
-        :class="{ active: mode === 'text' }"
-        @click="mode = 'text'"
+        :class="{ active: mode === InputMode.Text }"
+        @click="mode = InputMode.Text"
       >
         Text
       </button>
       <button
         class="tab"
-        :class="{ active: mode === 'type' }"
-        @click="mode = 'type'"
+        :class="{ active: mode === InputMode.Type }"
+        @click="mode = InputMode.Type"
       >
         Type
       </button>
     </div>
 
     <!-- Draw mode -->
-    <div v-if="mode === 'draw'" class="tab-content">
+    <div v-if="mode === InputMode.Draw" class="tab-content">
       <div class="size-row">
         <label>
           Height (n)
@@ -187,7 +180,7 @@ function loadFromType(): void {
             v-model.number="heightInput"
             type="number"
             min="1"
-            max="60"
+            :max="MAX_GRID_HEIGHT"
             @keydown="onKeyDown"
             @blur="applySize"
           />
@@ -198,7 +191,7 @@ function loadFromType(): void {
             v-model.number="widthInput"
             type="number"
             min="1"
-            max="200"
+            :max="MAX_GRID_WIDTH"
             @keydown="onKeyDown"
             @blur="applySize"
           />
@@ -212,15 +205,15 @@ function loadFromType(): void {
     </div>
 
     <!-- Import k mode -->
-    <div v-if="mode === 'import'" class="tab-content">
+    <div v-if="mode === InputMode.Import" class="tab-content">
       <div class="size-row">
         <label>
           n (height)
-          <input v-model.number="importN" type="number" min="1" max="60" />
+          <input v-model.number="importN" type="number" min="1" :max="MAX_GRID_HEIGHT" />
         </label>
         <label>
           width
-          <input v-model.number="importW" type="number" min="1" max="200" />
+          <input v-model.number="importW" type="number" min="1" :max="MAX_GRID_WIDTH" />
         </label>
       </div>
       <textarea
@@ -235,7 +228,7 @@ function loadFromType(): void {
     </div>
 
     <!-- Type mode -->
-    <div v-if="mode === 'type'" class="tab-content">
+    <div v-if="mode === InputMode.Type" class="tab-content">
       <p class="text-hint">
         Type any text and it will be rendered as <strong>pixel art</strong> using a built-in 5×7 font. Size is auto-calculated.
       </p>
@@ -253,7 +246,7 @@ function loadFromType(): void {
     </div>
 
     <!-- Text mode -->
-    <div v-if="mode === 'text'" class="tab-content">
+    <div v-if="mode === InputMode.Text" class="tab-content">
       <p class="text-hint">
         Paste rows of <strong>1</strong>s and <strong>0</strong>s. One row per line.
         Supports: <code>1,0,1</code> or <code>1 0 1</code> or <code>101</code>. Height and width are detected automatically.

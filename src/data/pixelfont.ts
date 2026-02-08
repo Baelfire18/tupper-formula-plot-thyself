@@ -1,11 +1,18 @@
-// 5×7 pixel font - each character is 7 rows of 5 columns
+import type { FontGlyph, TextRenderResult } from '../types'
+
+// ============================================
+// 5x7 pixel font constants
+// ============================================
+
+export const CHAR_HEIGHT = 7
+export const CHAR_WIDTH = 5
+export const CHAR_SPACING = 1
+
+// ============================================
+// Glyph definitions
+// Each character is 7 rows of variable columns.
 // 1 = on, 0 = off
-
-type FontGlyph = number[][]
-
-const CHAR_HEIGHT = 7
-const CHAR_WIDTH = 5
-const CHAR_SPACING = 1 // columns between characters
+// ============================================
 
 const GLYPHS: Record<string, FontGlyph> = {
   A: [
@@ -242,6 +249,8 @@ const GLYPHS: Record<string, FontGlyph> = {
     [1,0,0,0,0],
     [1,1,1,1,1],
   ],
+
+  // Digits
   '0': [
     [0,1,1,1,0],
     [1,0,0,0,1],
@@ -332,6 +341,8 @@ const GLYPHS: Record<string, FontGlyph> = {
     [0,0,0,0,1],
     [0,1,1,1,0],
   ],
+
+  // Punctuation & symbols (variable widths)
   ' ': [
     [0,0,0],
     [0,0,0],
@@ -505,8 +516,8 @@ const GLYPHS: Record<string, FontGlyph> = {
   ],
 }
 
-// Unknown character placeholder (filled block)
-const UNKNOWN: FontGlyph = [
+/** Placeholder glyph for unsupported characters */
+const UNKNOWN_GLYPH: FontGlyph = [
   [1,1,1,1,1],
   [1,0,0,0,1],
   [1,0,1,0,1],
@@ -516,19 +527,17 @@ const UNKNOWN: FontGlyph = [
   [1,1,1,1,1],
 ]
 
+// ============================================
+// Rendering
+// ============================================
+
 function getGlyph(ch: string): FontGlyph {
   const upper = ch.toUpperCase()
-  return GLYPHS[upper] ?? GLYPHS[ch] ?? UNKNOWN
-}
-
-export interface TextRenderResult {
-  grid: number[][]
-  height: number
-  width: number
+  return GLYPHS[upper] ?? GLYPHS[ch] ?? UNKNOWN_GLYPH
 }
 
 /**
- * Render a string to a pixel bitmap using the built-in 5×7 font.
+ * Render a string to a pixel bitmap using the built-in 5x7 font.
  * Adds 1px padding around the text.
  */
 export function renderTextToGrid(text: string): TextRenderResult {
@@ -536,10 +545,8 @@ export function renderTextToGrid(text: string): TextRenderResult {
     return { grid: [[0]], height: 1, width: 1 }
   }
 
-  // Get glyphs for each character
   const glyphs = Array.from(text).map(ch => getGlyph(ch))
 
-  // Calculate total width: sum of glyph widths + spacing between them + 1px padding on each side
   const innerWidth = glyphs.reduce((sum, g, i) => {
     return sum + g[0].length + (i < glyphs.length - 1 ? CHAR_SPACING : 0)
   }, 0)
@@ -549,12 +556,10 @@ export function renderTextToGrid(text: string): TextRenderResult {
   const totalWidth = innerWidth + padX * 2
   const totalHeight = CHAR_HEIGHT + padY * 2
 
-  // Create empty grid
   const grid: number[][] = Array.from({ length: totalHeight }, () =>
-    Array(totalWidth).fill(0) as number[]
+    Array(totalWidth).fill(0) as number[],
   )
 
-  // Stamp each glyph
   let cursorX = padX
   for (const glyph of glyphs) {
     const glyphW = glyph[0].length
@@ -570,5 +575,3 @@ export function renderTextToGrid(text: string): TextRenderResult {
 
   return { grid, height: totalHeight, width: totalWidth }
 }
-
-export { CHAR_HEIGHT, CHAR_WIDTH, CHAR_SPACING }

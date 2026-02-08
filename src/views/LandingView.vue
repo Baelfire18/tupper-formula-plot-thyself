@@ -1,22 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { CANVAS_COLORS } from '../constants/colors'
+import { GRID_TEMPLATES } from '../data/templates'
+import { drawCells, drawGridLines } from '../utils/canvas'
 
 const demoCanvas = ref<HTMLCanvasElement | null>(null)
 let animFrame: number | null = null
 let animStep = 0
 
-const smiley: number[][] = [
-  [0,0,1,1,1,1,1,1,0,0],
-  [0,1,0,0,0,0,0,0,1,0],
-  [1,0,1,0,0,0,0,1,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [1,0,1,0,0,0,0,1,0,1],
-  [1,0,0,1,0,0,1,0,0,1],
-  [1,0,0,0,1,1,0,0,0,1],
-  [1,0,0,0,0,0,0,0,0,1],
-  [0,1,0,0,0,0,0,0,1,0],
-  [0,0,1,1,1,1,1,1,0,0],
-]
+// Use the smiley template rather than hardcoding
+const smileyTemplate = GRID_TEMPLATES.find(t => t.id === 'smiley')
+const smiley = smileyTemplate?.grid ?? []
 
 function drawDemo(): void {
   const canvas = demoCanvas.value
@@ -25,47 +19,36 @@ function drawDemo(): void {
   if (!ctx) return
   const cell = 28
   const pad = 10
-  canvas.width = 10 * cell + pad * 2
-  canvas.height = 10 * cell + pad * 2
+  const n = smiley.length
+  const w = smiley[0]?.length ?? 0
+  canvas.width = w * cell + pad * 2
+  canvas.height = n * cell + pad * 2
 
-  const n = 10
-  const w = 10
-  const totalCells = 100
+  const totalCells = n * w
   const cellsToShow = Math.min(totalCells, animStep)
 
-  ctx.fillStyle = '#0f1730'
+  ctx.fillStyle = CANVAS_COLORS.bg
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+  // Animate cells column-by-column, bottom-to-top (Tupper ordering)
   let count = 0
   for (let c = 0; c < w; c++) {
     for (let rBottom = 0; rBottom < n; rBottom++) {
       const rTop = n - 1 - rBottom
       if (count < cellsToShow) {
-        ctx.fillStyle = smiley[rTop][c] ? '#ffe14a' : '#1c2752'
+        ctx.fillStyle = smiley[rTop][c] ? CANVAS_COLORS.on : CANVAS_COLORS.off
       } else {
-        ctx.fillStyle = '#1c2752'
+        ctx.fillStyle = CANVAS_COLORS.off
       }
       ctx.fillRect(pad + c * cell, pad + rTop * cell, cell, cell)
       count++
     }
   }
 
-  ctx.strokeStyle = '#2a376b'
-  ctx.lineWidth = 1
-  for (let c = 0; c <= w; c++) {
-    ctx.beginPath()
-    ctx.moveTo(pad + c * cell + 0.5, pad)
-    ctx.lineTo(pad + c * cell + 0.5, pad + n * cell)
-    ctx.stroke()
-  }
-  for (let r = 0; r <= n; r++) {
-    ctx.beginPath()
-    ctx.moveTo(pad, pad + r * cell + 0.5)
-    ctx.lineTo(pad + w * cell, pad + r * cell + 0.5)
-    ctx.stroke()
-  }
+  drawGridLines(ctx, n, w, cell, pad, pad)
 
-  ctx.strokeStyle = 'rgba(122, 162, 255, 0.4)'
+  // Frame border
+  ctx.strokeStyle = CANVAS_COLORS.frame
   ctx.lineWidth = 2
   ctx.strokeRect(pad - 1, pad - 1, w * cell + 2, n * cell + 2)
 }

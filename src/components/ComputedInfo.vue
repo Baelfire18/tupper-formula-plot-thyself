@@ -1,53 +1,51 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useTupper, formatBigInt, formatBigIntFull } from '../composables/useTupper'
+import { useTupper } from '../composables/useTupper'
+import { formatBigInt, formatBigIntFull } from '../utils/format'
+import { downloadBlob, downloadCanvasAsPng } from '../utils/export'
 
 const tupper = useTupper()
-const copied = ref<boolean>(false)
+const copied = ref(false)
 
-const kFull = computed<string>(() => {
+const kFull = computed(() => {
   if (!tupper.result.computed || tupper.result.k === null) return '—'
   return formatBigIntFull(tupper.result.k)
 })
 
-const kAbbr = computed<string>(() => {
+const kAbbr = computed(() => {
   if (!tupper.result.computed || tupper.result.k === null) return '—'
   return formatBigInt(tupper.result.k)
 })
 
-const nAbbr = computed<string>(() => {
+const nAbbr = computed(() => {
   if (!tupper.result.computed || tupper.result.N === null) return '—'
   return formatBigInt(tupper.result.N)
 })
 
-const yRange = computed<string>(() => {
+const yRange = computed(() => {
   if (!tupper.result.computed || tupper.result.k === null) return '—'
   const k = tupper.result.k
   const n = tupper.gridHeight.value
   return `[${formatBigInt(k)},  ${formatBigInt(k + BigInt(n))})`
 })
 
-const bboxStr = computed<string>(() => {
+const bboxStr = computed(() => {
   if (!tupper.result.computed) return '—'
   const b = tupper.result.bbox
   if (!b) return 'EMPTY'
   return `(${b.xMin}, ${b.yMin}, ${b.xMax}, ${b.yMax})`
 })
 
-const centerStr = computed<string>(() => {
+const centerStr = computed(() => {
   if (!tupper.result.computed) return '—'
   const c = tupper.result.center
   if (!c) return '—'
   return `(${c.x.toFixed(2)}, ${c.y.toFixed(2)})`
 })
 
-const onCells = computed<number>(() => {
-  return tupper.countOnCells()
-})
+const onCells = computed(() => tupper.countOnCells())
 
-const totalCells = computed<number>(() => {
-  return tupper.gridHeight.value * tupper.gridWidth.value
-})
+const totalCells = computed(() => tupper.gridHeight.value * tupper.gridWidth.value)
 
 async function copyK(): Promise<void> {
   if (!tupper.result.computed || tupper.result.k === null) return
@@ -70,30 +68,17 @@ async function copyK(): Promise<void> {
 function downloadPNG(): void {
   const canvas = document.querySelector('.decoded-preview canvas') as HTMLCanvasElement | null
   if (!canvas) return
-  const link = document.createElement('a')
-  link.download = `tupper-k-${Date.now()}.png`
-  link.href = canvas.toDataURL('image/png')
-  link.click()
+  downloadCanvasAsPng(canvas, `tupper-k-${Date.now()}.png`)
 }
 
 function downloadSVG(): void {
   const svg = tupper.exportAsSvg()
-  const blob = new Blob([svg], { type: 'image/svg+xml' })
-  const link = document.createElement('a')
-  link.download = `tupper-k-${Date.now()}.svg`
-  link.href = URL.createObjectURL(blob)
-  link.click()
-  URL.revokeObjectURL(link.href)
+  downloadBlob(new Blob([svg], { type: 'image/svg+xml' }), `tupper-k-${Date.now()}.svg`)
 }
 
 function downloadTXT(): void {
   const txt = tupper.exportAsTxt()
-  const blob = new Blob([txt], { type: 'text/plain' })
-  const link = document.createElement('a')
-  link.download = `tupper-k-${Date.now()}.txt`
-  link.href = URL.createObjectURL(blob)
-  link.click()
-  URL.revokeObjectURL(link.href)
+  downloadBlob(new Blob([txt], { type: 'text/plain' }), `tupper-k-${Date.now()}.txt`)
 }
 </script>
 

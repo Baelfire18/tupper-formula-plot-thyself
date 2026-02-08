@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useTupper } from '../composables/useTupper'
-import { TEMPLATES } from '../data/templates'
+import { GRID_TEMPLATES } from '../data/templates'
 import GridControls from '../components/GridControls.vue'
 import TemplateSelector from '../components/TemplateSelector.vue'
 import BitmapEditor from '../components/BitmapEditor.vue'
@@ -12,7 +12,7 @@ const tupper = useTupper()
 
 onMounted(() => {
   if (!tupper.result.computed && tupper.countOnCells() === 0) {
-    tupper.loadTemplate(TEMPLATES[0].grid)
+    tupper.loadTemplate(GRID_TEMPLATES[0].grid)
   }
 })
 </script>
