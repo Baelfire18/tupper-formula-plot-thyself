@@ -13,8 +13,6 @@ const mode = ref<InputMode>(InputMode.Draw)
 
 // Import k state
 const importK = ref('')
-const importN = ref(17)
-const importW = ref(106)
 const importError = ref('')
 
 // Text import state
@@ -42,14 +40,27 @@ function onKeyDown(e: KeyboardEvent): void {
   if (e.key === 'Enter') applySize()
 }
 
+/** Infer minimum width from k and n: width = ceil(bitLength(k / n) / n) */
+function inferWidthFromK(kStr: string, n: number): number {
+  try {
+    const k = BigInt(kStr.trim())
+    const N = k / BigInt(n)
+    if (N <= 0n) return 1
+    const bits = N.toString(2).length
+    return Math.max(1, Math.ceil(bits / n))
+  } catch {
+    return 1
+  }
+}
+
 function decodeImport(): void {
   importError.value = ''
   if (!importK.value.trim()) {
     importError.value = 'Please enter a k value'
     return
   }
-  const n = Math.max(1, Math.min(MAX_GRID_HEIGHT, Number(importN.value) || 17))
-  const w = Math.max(1, Math.min(MAX_GRID_WIDTH, Number(importW.value) || 106))
+  const n = Math.max(1, Math.min(MAX_GRID_HEIGHT, Number(heightInput.value) || 17))
+  const w = Math.min(MAX_GRID_WIDTH, inferWidthFromK(importK.value, n))
   const ok = tupper.loadFromK(importK.value, n, w)
   if (!ok) {
     importError.value = 'Invalid k value. Must be a valid integer.'
@@ -214,13 +225,15 @@ function loadFromType(): void {
     <div v-if="mode === InputMode.Import" class="tab-content">
       <div class="size-row">
         <label>
-          n (height)
-          <input v-model.number="importN" type="number" min="1" :max="MAX_GRID_HEIGHT" />
+          Height (n)
+          <input
+            v-model.number="heightInput"
+            type="number"
+            min="1"
+            :max="MAX_GRID_HEIGHT"
+          />
         </label>
-        <label>
-          width
-          <input v-model.number="importW" type="number" min="1" :max="MAX_GRID_WIDTH" />
-        </label>
+        <span class="width-hint">Width is inferred from k</span>
       </div>
       <textarea
         v-model="importK"
@@ -348,6 +361,14 @@ input[type='number'] {
 input[type='number']:focus {
   border-color: rgba(122, 162, 255, 0.7);
   box-shadow: 0 0 0 3px rgba(122, 162, 255, 0.18);
+}
+
+.width-hint {
+  font-size: 11px;
+  color: var(--muted);
+  align-self: flex-end;
+  padding-bottom: 10px;
+  opacity: 0.7;
 }
 
 .actions {

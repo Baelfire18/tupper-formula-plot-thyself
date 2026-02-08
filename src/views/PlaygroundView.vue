@@ -4,6 +4,7 @@ import { useTupper } from '../composables/useTupper'
 import { GRID_TEMPLATES } from '../data/templates'
 import GridControls from '../components/GridControls.vue'
 import TemplateSelector from '../components/TemplateSelector.vue'
+import FormulaDisplay from '../components/FormulaDisplay.vue'
 import BitmapEditor from '../components/BitmapEditor.vue'
 import DecodedPreview from '../components/DecodedPreview.vue'
 import ComputedInfo from '../components/ComputedInfo.vue'
@@ -25,6 +26,7 @@ onMounted(() => {
         <TemplateSelector />
       </aside>
       <main class="main-area">
+        <FormulaDisplay />
         <BitmapEditor />
 
         <!-- Big prominent compute button -->
