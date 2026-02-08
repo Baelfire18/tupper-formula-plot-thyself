@@ -185,7 +185,7 @@ function downloadTXT(): void {
         </div>
       </div>
 
-      <div class="k-full-section" v-if="kFull.length > 30">
+      <div class="k-full-section">
         <div class="k-full-label">
           Full k value
           <span class="k-full-params mono">Decode with (n={{ tupper.gridHeight }}, w={{ tupper.gridWidth }})</span>
