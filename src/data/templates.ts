@@ -6,6 +6,15 @@ import type { GridTemplate, FormulaTemplate } from '../types'
 
 export const GRID_TEMPLATES: GridTemplate[] = [
   {
+    id: "square",
+    name: "Square",
+    icon: "🟨",
+    grid: [
+      [1, 0],
+      [0, 0],
+    ]
+  },
+  {
     id: 'smiley',
     name: 'Smiley',
     icon: '😊',
