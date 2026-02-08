@@ -13,6 +13,11 @@ const routes: RouteRecordRaw[] = [
     name: 'playground',
     component: () => import('../views/PlaygroundView.vue'),
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('../views/NotFoundView.vue'),
+  },
 ]
 
 export default createRouter({

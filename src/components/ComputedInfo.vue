@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useTupper } from '../composables/useTupper'
-import { formatBigInt, formatBigIntFull } from '../utils/format'
+import { formatBigInt } from '../utils/format'
 import { downloadBlob, downloadCanvasAsPng } from '../utils/export'
+import KValueDisplay from './KValueDisplay.vue'
 
 const tupper = useTupper()
 const copied = ref(false)
 const copiedN = ref(false)
-const copiedW = ref(false)
-
-const kFull = computed(() => {
-  if (!tupper.result.computed || tupper.result.k === null) return '—'
-  return formatBigIntFull(tupper.result.k)
-})
 
 const kAbbr = computed(() => {
   if (!tupper.result.computed || tupper.result.k === null) return '—'
@@ -76,14 +71,6 @@ async function copyN(): Promise<void> {
   copiedN.value = true
   setTimeout(() => {
     copiedN.value = false
-  }, 2000)
-}
-
-async function copyW(): Promise<void> {
-  await writeToClipboard(tupper.gridWidth.value.toString())
-  copiedW.value = true
-  setTimeout(() => {
-    copiedW.value = false
   }, 2000)
 }
 
@@ -176,22 +163,18 @@ function downloadTXT(): void {
           <button class="btn-action" @click="copyN">
             {{ copiedN ? '✓ Copied!' : `Copy n (${tupper.gridHeight.value})` }}
           </button>
-          <button class="btn-action" @click="copyW">
-            {{ copiedW ? '✓ Copied!' : `Copy w (${tupper.gridWidth.value})` }}
-          </button>
           <button class="btn-action" @click="downloadPNG">PNG</button>
           <button class="btn-action" @click="downloadSVG">SVG</button>
           <button class="btn-action" @click="downloadTXT">TXT</button>
         </div>
       </div>
 
-      <div class="k-full-section">
-        <div class="k-full-label">
-          Full k value
-          <span class="k-full-params mono">Decode with (n={{ tupper.gridHeight }}, w={{ tupper.gridWidth }})</span>
-        </div>
-        <div class="k-full-value mono">{{ kFull }}</div>
-      </div>
+      <KValueDisplay
+        v-if="tupper.result.k !== null"
+        :k="tupper.result.k"
+        :n="tupper.gridHeight.value"
+        :w="tupper.gridWidth.value"
+      />
     </div>
 
     <div v-else class="empty-state">
@@ -340,36 +323,6 @@ h3 {
 .btn-action:hover {
   background: rgba(122, 162, 255, 0.22);
   border-color: rgba(122, 162, 255, 0.35);
-}
-
-/* k full value */
-.k-full-section {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.12);
-}
-
-.k-full-label {
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.k-full-value {
-  font-size: 11px;
-  word-break: break-all;
-  line-height: 1.5;
-  color: var(--text);
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.k-full-params {
-  color: var(--accent);
-  font-weight: 600;
-  margin-left: 6px;
 }
 
 .empty-state {
