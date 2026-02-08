@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useTupper } from '../composables/useTupper'
+import { renderTextToGrid } from '../data/pixelfont'
 
 const tupper = useTupper()
 const heightInput = ref<number>(tupper.gridHeight.value)
 const widthInput = ref<number>(tupper.gridWidth.value)
 
-const mode = ref<'draw' | 'import' | 'text'>('draw')
+const mode = ref<'draw' | 'import' | 'text' | 'type'>('draw')
 
 // Import k state
 const importK = ref<string>('')
@@ -17,6 +18,10 @@ const importError = ref<string>('')
 // Text import state
 const textInput = ref<string>('')
 const textError = ref<string>('')
+
+// Type text state
+const typeInput = ref<string>('')
+const typeError = ref<string>('')
 
 watch([() => tupper.gridHeight.value, () => tupper.gridWidth.value], ([h, w]) => {
   heightInput.value = h
@@ -115,6 +120,28 @@ function loadFromText(): void {
   tupper.loadTemplate(parsed)
   textError.value = ''
 }
+
+function loadFromType(): void {
+  typeError.value = ''
+  if (!typeInput.value.trim()) {
+    typeError.value = 'Type something first!'
+    return
+  }
+
+  const result = renderTextToGrid(typeInput.value)
+
+  if (result.height > 60) {
+    typeError.value = `The rendered text is too tall (${result.height} rows). Maximum is 60.`
+    return
+  }
+  if (result.width > 200) {
+    typeError.value = `"${typeInput.value}" is too long — it needs ${result.width} columns but the max is 200. Try shorter text.`
+    return
+  }
+
+  tupper.loadTemplate(result.grid)
+  typeError.value = ''
+}
 </script>
 
 <template>
@@ -141,6 +168,13 @@ function loadFromText(): void {
         @click="mode = 'text'"
       >
         Text
+      </button>
+      <button
+        class="tab"
+        :class="{ active: mode === 'type' }"
+        @click="mode = 'type'"
+      >
+        Type
       </button>
     </div>
 
@@ -198,6 +232,24 @@ function loadFromText(): void {
         Load into editor
       </button>
       <div v-if="importError" class="error-msg">{{ importError }}</div>
+    </div>
+
+    <!-- Type mode -->
+    <div v-if="mode === 'type'" class="tab-content">
+      <p class="text-hint">
+        Type any text and it will be rendered as <strong>pixel art</strong> using a built-in 5×7 font. Size is auto-calculated.
+      </p>
+      <input
+        v-model="typeInput"
+        type="text"
+        placeholder="i love u"
+        class="type-input"
+        @keydown.enter="loadFromType"
+      />
+      <button class="btn-decode" @click="loadFromType">
+        Load into editor
+      </button>
+      <div v-if="typeError" class="error-msg">{{ typeError }}</div>
     </div>
 
     <!-- Text mode -->
@@ -379,6 +431,29 @@ input[type="number"]:focus {
   border-radius: 4px;
   font-family: var(--font-mono);
   font-size: 10px;
+}
+
+.type-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text);
+  outline: none;
+  font-size: 15px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+}
+
+.type-input:focus {
+  border-color: rgba(122, 162, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(122, 162, 255, 0.18);
+}
+
+.type-input::placeholder {
+  color: var(--muted);
+  opacity: 0.5;
 }
 
 .mono {
