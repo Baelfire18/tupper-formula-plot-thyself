@@ -6,11 +6,17 @@ const tupper = useTupper()
 const heightInput = ref<number>(tupper.gridHeight.value)
 const widthInput = ref<number>(tupper.gridWidth.value)
 
-const mode = ref<'draw' | 'import'>('draw')
+const mode = ref<'draw' | 'import' | 'text'>('draw')
+
+// Import k state
 const importK = ref<string>('')
 const importN = ref<number>(17)
 const importW = ref<number>(106)
 const importError = ref<string>('')
+
+// Text import state
+const textInput = ref<string>('')
+const textError = ref<string>('')
 
 watch([() => tupper.gridHeight.value, () => tupper.gridWidth.value], ([h, w]) => {
   heightInput.value = h
@@ -44,6 +50,71 @@ function decodeImport(): void {
     importError.value = ''
   }
 }
+
+function loadFromText(): void {
+  textError.value = ''
+  const raw = textInput.value.trim()
+  if (!raw) {
+    textError.value = 'Please paste a grid (rows of 1s and 0s).'
+    return
+  }
+
+  // Split into lines, ignore empty lines
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0)
+  if (lines.length === 0) {
+    textError.value = 'Could not find any rows. Use one row per line with 1s and 0s.'
+    return
+  }
+
+  // Parse each line: support "1,0,1,0" or "1 0 1 0" or "1010"
+  const parsed: number[][] = []
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    let cells: number[]
+
+    if (line.includes(',')) {
+      // comma-separated
+      cells = line.split(',').map(v => v.trim()).map(v => (v === '1' ? 1 : 0))
+    } else if (line.includes(' ')) {
+      // space-separated
+      cells = line.split(/\s+/).map(v => (v === '1' ? 1 : 0))
+    } else {
+      // raw string of digits "10110..."
+      cells = line.split('').map(ch => (ch === '1' ? 1 : 0))
+    }
+
+    if (cells.length === 0) {
+      textError.value = `Row ${i + 1} is empty.`
+      return
+    }
+    parsed.push(cells)
+  }
+
+  // Validate: all rows must have the same width
+  const w = parsed[0].length
+  for (let i = 1; i < parsed.length; i++) {
+    if (parsed[i].length !== w) {
+      textError.value = `Row widths don't match: row 1 has ${w} columns but row ${i + 1} has ${parsed[i].length}. All rows must be the same width.`
+      return
+    }
+  }
+
+  const h = parsed.length
+
+  // Validate limits
+  if (h > 60) {
+    textError.value = `Too many rows (${h}). Maximum height is 60.`
+    return
+  }
+  if (w > 200) {
+    textError.value = `Too many columns (${w}). Maximum width is 200.`
+    return
+  }
+
+  // Load it
+  tupper.loadTemplate(parsed)
+  textError.value = ''
+}
 </script>
 
 <template>
@@ -63,6 +134,13 @@ function decodeImport(): void {
         @click="mode = 'import'"
       >
         Import k
+      </button>
+      <button
+        class="tab"
+        :class="{ active: mode === 'text' }"
+        @click="mode = 'text'"
+      >
+        Text
       </button>
     </div>
 
@@ -99,8 +177,8 @@ function decodeImport(): void {
       </div>
     </div>
 
-    <!-- Import mode -->
-    <div v-else class="tab-content">
+    <!-- Import k mode -->
+    <div v-if="mode === 'import'" class="tab-content">
       <div class="size-row">
         <label>
           n (height)
@@ -119,7 +197,29 @@ function decodeImport(): void {
       <button class="btn-decode" @click="decodeImport">
         Load into editor
       </button>
-      <div v-if="importError" class="import-error">{{ importError }}</div>
+      <div v-if="importError" class="error-msg">{{ importError }}</div>
+    </div>
+
+    <!-- Text mode -->
+    <div v-if="mode === 'text'" class="tab-content">
+      <p class="text-hint">
+        Paste rows of <strong>1</strong>s and <strong>0</strong>s. One row per line.
+        Supports: <code>1,0,1</code> or <code>1 0 1</code> or <code>101</code>. Height and width are detected automatically.
+      </p>
+      <textarea
+        v-model="textInput"
+        placeholder="0,0,1,1,1,1,0,0
+0,1,0,0,0,0,1,0
+1,0,1,0,0,1,0,1
+1,0,0,1,1,0,0,1
+0,1,0,0,0,0,1,0
+0,0,1,1,1,1,0,0"
+        class="import-textarea mono"
+      />
+      <button class="btn-decode" @click="loadFromText">
+        Load into editor
+      </button>
+      <div v-if="textError" class="error-msg">{{ textError }}</div>
     </div>
   </div>
 </template>
@@ -145,12 +245,12 @@ function decodeImport(): void {
 
 .tab {
   flex: 1;
-  padding: 8px 10px;
+  padding: 8px 6px;
   border-radius: 8px;
   border: none;
   background: transparent;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
@@ -225,10 +325,10 @@ input[type="number"]:focus {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Import mode */
+/* Shared import / text styles */
 .import-textarea {
   width: 100%;
-  min-height: 70px;
+  min-height: 80px;
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -260,9 +360,25 @@ input[type="number"]:focus {
   background: rgba(122, 162, 255, 0.25);
 }
 
-.import-error {
+.error-msg {
   color: #ff6b6b;
   font-size: 12px;
+  line-height: 1.4;
+}
+
+.text-hint {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.text-hint code {
+  background: rgba(122, 162, 255, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
 }
 
 .mono {
