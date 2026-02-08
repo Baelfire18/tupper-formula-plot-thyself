@@ -4,10 +4,6 @@ import { useTupper, formatBigInt, formatBigIntFull } from '../composables/useTup
 
 const tupper = useTupper()
 const copied = ref<boolean>(false)
-const importK = ref<string>('')
-const importN = ref<number>(17)
-const importW = ref<number>(106)
-const importError = ref<string>('')
 
 const kFull = computed<string>(() => {
   if (!tupper.result.computed || tupper.result.k === null) return '—'
@@ -71,20 +67,6 @@ async function copyK(): Promise<void> {
   }
 }
 
-function decodeImport(): void {
-  importError.value = ''
-  if (!importK.value.trim()) {
-    importError.value = 'Please enter a k value'
-    return
-  }
-  const n = Math.max(1, Math.min(60, Number(importN.value) || 17))
-  const w = Math.max(1, Math.min(200, Number(importW.value) || 106))
-  const ok = tupper.loadFromK(importK.value, n, w)
-  if (!ok) {
-    importError.value = 'Invalid k value. Must be a valid integer.'
-  }
-}
-
 function downloadPNG(): void {
   const canvas = document.querySelector('.decoded-preview canvas') as HTMLCanvasElement | null
   if (!canvas) return
@@ -92,6 +74,26 @@ function downloadPNG(): void {
   link.download = `tupper-k-${Date.now()}.png`
   link.href = canvas.toDataURL('image/png')
   link.click()
+}
+
+function downloadSVG(): void {
+  const svg = tupper.exportAsSvg()
+  const blob = new Blob([svg], { type: 'image/svg+xml' })
+  const link = document.createElement('a')
+  link.download = `tupper-k-${Date.now()}.svg`
+  link.href = URL.createObjectURL(blob)
+  link.click()
+  URL.revokeObjectURL(link.href)
+}
+
+function downloadTXT(): void {
+  const txt = tupper.exportAsTxt()
+  const blob = new Blob([txt], { type: 'text/plain' })
+  const link = document.createElement('a')
+  link.download = `tupper-k-${Date.now()}.txt`
+  link.href = URL.createObjectURL(blob)
+  link.click()
+  URL.revokeObjectURL(link.href)
 }
 </script>
 
@@ -152,11 +154,17 @@ function downloadPNG(): void {
         <div class="v mono">{{ tupper.result.quadrant }}</div>
       </div>
 
-      <div class="action-row">
-        <button class="btn-action" @click="copyK" :disabled="!tupper.result.computed">
-          {{ copied ? '✓ Copied!' : 'Copy k' }}
-        </button>
-        <button class="btn-action" @click="downloadPNG">Download PNG</button>
+      <!-- Actions -->
+      <div class="action-section">
+        <h3>Export</h3>
+        <div class="action-row">
+          <button class="btn-action" @click="copyK">
+            {{ copied ? '✓ Copied!' : 'Copy k' }}
+          </button>
+          <button class="btn-action" @click="downloadPNG">PNG</button>
+          <button class="btn-action" @click="downloadSVG">SVG</button>
+          <button class="btn-action" @click="downloadTXT">TXT</button>
+        </div>
       </div>
 
       <div class="k-full-section" v-if="kFull.length > 30">
@@ -166,30 +174,7 @@ function downloadPNG(): void {
     </div>
 
     <div v-else class="empty-state">
-      <p>Draw something in the editor, then click <span class="pill">Compute k</span> to see results.</p>
-    </div>
-
-    <div class="import-section">
-      <h3>Import k value</h3>
-      <div class="import-row">
-        <label>
-          n (height)
-          <input v-model.number="importN" type="number" min="1" max="60" />
-        </label>
-        <label>
-          width
-          <input v-model.number="importW" type="number" min="1" max="200" />
-        </label>
-      </div>
-      <textarea
-        v-model="importK"
-        placeholder="Paste k value here..."
-        class="import-textarea mono"
-      />
-      <div class="import-actions">
-        <button class="btn-action" @click="decodeImport">Decode k</button>
-      </div>
-      <div v-if="importError" class="import-error">{{ importError }}</div>
+      <p>Draw something in the editor, then click <strong>Plot It!</strong> to encode and see the results.</p>
     </div>
   </div>
 </template>
@@ -211,7 +196,7 @@ h2 {
 
 h3 {
   margin: 0 0 8px;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
   font-weight: 600;
 }
@@ -267,6 +252,7 @@ h3 {
   line-height: 1;
   border: 1px solid rgba(122, 162, 255, 0.25);
   transition: all 0.2s;
+  padding: 0;
 }
 
 .tip-icon:hover,
@@ -303,16 +289,23 @@ h3 {
   font-family: var(--font-mono);
 }
 
+/* Actions */
+.action-section {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
 .action-row {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .btn-action {
-  padding: 8px 14px;
+  padding: 7px 14px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: rgba(122, 162, 255, 0.12);
+  background: rgba(122, 162, 255, 0.1);
   color: var(--text);
   cursor: pointer;
   font-weight: 600;
@@ -322,13 +315,10 @@ h3 {
 
 .btn-action:hover {
   background: rgba(122, 162, 255, 0.22);
+  border-color: rgba(122, 162, 255, 0.35);
 }
 
-.btn-action:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
+/* k full value */
 .k-full-section {
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -357,78 +347,5 @@ h3 {
   text-align: center;
   color: var(--muted);
   font-size: 13px;
-}
-
-.empty-state .pill {
-  display: inline-block;
-  padding: 1px 7px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.06);
-  font-size: 11px;
-}
-
-.import-section {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-
-.import-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.import-row label {
-  font-size: 12px;
-  color: var(--muted);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.import-row input {
-  width: 80px;
-  padding: 7px 8px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--panel2);
-  color: var(--text);
-  outline: none;
-  font-size: 13px;
-  font-family: var(--font-mono);
-}
-
-.import-row input:focus {
-  border-color: rgba(122, 162, 255, 0.7);
-}
-
-.import-textarea {
-  width: 100%;
-  min-height: 60px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--panel2);
-  color: var(--text);
-  outline: none;
-  resize: vertical;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.import-textarea:focus {
-  border-color: rgba(122, 162, 255, 0.7);
-}
-
-.import-actions {
-  margin-top: 8px;
-}
-
-.import-error {
-  margin-top: 6px;
-  color: #ff6b6b;
-  font-size: 12px;
 }
 </style>
