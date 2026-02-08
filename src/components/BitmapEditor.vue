@@ -196,6 +196,6 @@ canvas {
   max-height: 600px;
   height: auto;
   image-rendering: pixelated;
-  cursor: crosshair;
+  cursor: pointer;
 }
 </style>
