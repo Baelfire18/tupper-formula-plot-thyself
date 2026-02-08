@@ -1,0 +1,17 @@
+{
+  // Formatter: use Volar for Vue, TS built-in for TS
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+
+  // Quote style: single quotes everywhere
+  "typescript.preferences.quoteStyle": "single",
+  "javascript.preferences.quoteStyle": "single",
+
+  // Volar HTML formatting — keep attributes consistent
+  "vue.format.script.initialIndent": false,
+  "vue.format.style.initialIndent": false
+}
