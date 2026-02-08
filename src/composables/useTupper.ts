@@ -219,11 +219,11 @@ export function useTupper() {
     gridWidth.value = w
     grid.value = templateGrid.map(row => [...row])
     resetBuffer(n, w, grid.value)
+    clearResult()
     gridVersion.value++
-    compute()
   }
 
-  function loadFromK(kStr: string, n: number, w: number): boolean {
+  function loadFromK(kStr: string, n: number, w: number, autoCompute = false): boolean {
     try {
       const k = BigInt(kStr.trim())
       gridHeight.value = n
@@ -232,17 +232,21 @@ export function useTupper() {
       resetBuffer(n, w, grid.value)
       gridVersion.value++
 
-      const bigN = k / BigInt(n)
-      const bbox = computeBboxBottomOrigin(grid.value)
-      const q = computeQuadrant(bbox, n, w)
+      if (autoCompute) {
+        const bigN = k / BigInt(n)
+        const bbox = computeBboxBottomOrigin(grid.value)
+        const q = computeQuadrant(bbox, n, w)
 
-      result.computed = true
-      result.N = bigN
-      result.k = k
-      result.decodedGrid = grid.value.map(row => [...row])
-      result.bbox = bbox
-      result.quadrant = q.quadrant
-      result.center = q.center
+        result.computed = true
+        result.N = bigN
+        result.k = k
+        result.decodedGrid = grid.value.map(row => [...row])
+        result.bbox = bbox
+        result.quadrant = q.quadrant
+        result.center = q.center
+      } else {
+        clearResult()
+      }
       return true
     } catch (e) {
       console.error('Failed to decode k:', e)
@@ -290,8 +294,8 @@ export function useTupper() {
       }
     }
     syncToBuffer()
+    clearResult()
     gridVersion.value++
-    compute()
   }
 
   function clearResult(): void {
@@ -333,6 +337,26 @@ export function useTupper() {
     return count
   }
 
+  function exportAsTxt(): string {
+    return grid.value.map(row => row.join(',')).join('\n')
+  }
+
+  function exportAsSvg(): string {
+    const n = gridHeight.value
+    const w = gridWidth.value
+    const cellPx = 20
+    const svgW = w * cellPx
+    const svgH = n * cellPx
+    let rects = ''
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < w; c++) {
+        const fill = grid.value[r][c] ? '#ffe14a' : '#1c2752'
+        rects += `  <rect x="${c * cellPx}" y="${r * cellPx}" width="${cellPx}" height="${cellPx}" fill="${fill}" stroke="#2a376b" stroke-width="0.5"/>\n`
+      }
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}">\n<rect width="100%" height="100%" fill="#0f1730"/>\n${rects}</svg>`
+  }
+
   return {
     gridHeight,
     gridWidth,
@@ -348,6 +372,8 @@ export function useTupper() {
     randomGrid,
     compute,
     countOnCells,
+    exportAsTxt,
+    exportAsSvg,
     formatBigInt,
     formatBigIntFull
   }
