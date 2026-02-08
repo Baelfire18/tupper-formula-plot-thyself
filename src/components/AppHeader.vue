@@ -16,6 +16,9 @@ const route = useRoute()
         <router-link to="/playground" :class="{ active: route.name === 'playground' }"
           >Playground</router-link
         >
+        <router-link to="/credits" :class="{ active: route.name === 'credits' }"
+          >Credits</router-link
+        >
       </nav>
     </div>
   </header>

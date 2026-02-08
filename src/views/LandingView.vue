@@ -4,7 +4,6 @@ import WhyFunSection from '../components/landing/WhyFunSection.vue'
 import FormulaSection from '../components/landing/FormulaSection.vue'
 import PlaygroundSection from '../components/landing/PlaygroundSection.vue'
 import FunFactsSection from '../components/landing/FunFactsSection.vue'
-import LandingFooter from '../components/landing/LandingFooter.vue'
 </script>
 
 <template>
@@ -14,7 +13,6 @@ import LandingFooter from '../components/landing/LandingFooter.vue'
     <FormulaSection />
     <PlaygroundSection />
     <FunFactsSection />
-    <LandingFooter />
   </div>
 </template>
 
