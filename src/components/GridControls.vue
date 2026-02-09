@@ -216,10 +216,7 @@ function loadFromType(): void {
             <button
               class="btn-square"
               title="Set width = height (square grid)"
-              @click="
-                widthInput = heightInput
-                applySize()
-              "
+              @click="widthInput = heightInput; applySize()"
             >
               n×n
             </button>
