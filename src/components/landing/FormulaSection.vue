@@ -6,9 +6,7 @@ import InfoCard from '../InfoCard.vue'
   <section class="formula-section" id="formula">
     <div class="section-inner">
       <h2>How The Formula Works</h2>
-      <p class="section-desc">
-        It looks intimidating, but the idea is dead simple.
-      </p>
+      <p class="section-desc">It looks intimidating, but the idea is dead simple.</p>
       <div class="formula-card">
         <div class="formula-display">
           <span class="f-half">1/2</span>
@@ -30,19 +28,19 @@ import InfoCard from '../InfoCard.vue'
 
       <div class="breakdown">
         <InfoCard icon="💡" title="Your drawing is a number">
-          Every pixel grid can be flattened into a sequence of 1s and 0s — a binary number.
-          That number, called <strong>k</strong>, is the only thing you need to perfectly
-          reconstruct your drawing.
+          Every pixel grid can be flattened into a sequence of 1s and 0s — a binary number. That
+          number, called <strong>k</strong>, is the only thing you need to perfectly reconstruct
+          your drawing.
         </InfoCard>
         <InfoCard icon="🔍" title="The formula reads one bit at a time">
-          For each pixel position <code>(x, y)</code>, the formula looks up the right bit
-          inside <strong>k</strong> and checks: is it a 1 or a 0? That's literally all it
-          does — a fancy way to read binary digits.
+          For each pixel position <code>(x, y)</code>, the formula looks up the right bit inside
+          <strong>k</strong> and checks: is it a 1 or a 0? That's literally all it does — a fancy
+          way to read binary digits.
         </InfoCard>
-        <InfoCard icon="✨" title="The &quot;magic&quot; is choosing the right k">
+        <InfoCard icon="✨" title='The "magic" is choosing the right k'>
           The formula itself isn't special — it can decode <em>any</em> image. What makes it
-          self-referential is that someone found the exact k whose decoded output is a picture
-          of the formula. A mathematical mic drop. 🎤
+          self-referential is that someone found the exact k whose decoded output is a picture of
+          the formula. A mathematical mic drop. 🎤
         </InfoCard>
       </div>
     </div>

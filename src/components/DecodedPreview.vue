@@ -61,7 +61,10 @@ function clampPan(): void {
   const cs = effectiveCellSize()
   const viewW = EXPLORE_GRID_W / cs
   const viewH = EXPLORE_GRID_H / cs
-  panX.value = Math.max(-Math.max(viewW * 0.5, 20), Math.min(w + Math.max(viewW * 0.5, 20), panX.value))
+  panX.value = Math.max(
+    -Math.max(viewW * 0.5, 20),
+    Math.min(w + Math.max(viewW * 0.5, 20), panX.value),
+  )
   panY.value = Math.max(-Math.max(30 * n, viewH), Math.min(n + Math.max(30 * n, viewH), panY.value))
 }
 
@@ -203,8 +206,8 @@ function onMouseMove(e: MouseEvent): void {
   const rect = canvas.getBoundingClientRect()
   const scale = canvas.width / rect.width
   const cs = effectiveCellSize()
-  panX.value -= (e.clientX - lastMouseX) * scale / cs
-  panY.value -= (e.clientY - lastMouseY) * scale / cs
+  panX.value -= ((e.clientX - lastMouseX) * scale) / cs
+  panY.value -= ((e.clientY - lastMouseY) * scale) / cs
   clampPan()
   lastMouseX = e.clientX
   lastMouseY = e.clientY
@@ -247,8 +250,8 @@ function onTouchMove(e: TouchEvent): void {
     const rect = canvas.getBoundingClientRect()
     const scale = canvas.width / rect.width
     const cs = effectiveCellSize()
-    panX.value -= (e.touches[0].clientX - lastMouseX) * scale / cs
-    panY.value -= (e.touches[0].clientY - lastMouseY) * scale / cs
+    panX.value -= ((e.touches[0].clientX - lastMouseX) * scale) / cs
+    panY.value -= ((e.touches[0].clientY - lastMouseY) * scale) / cs
     clampPan()
     lastMouseX = e.touches[0].clientX
     lastMouseY = e.touches[0].clientY

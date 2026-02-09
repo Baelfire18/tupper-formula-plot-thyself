@@ -57,9 +57,7 @@ function goPlayground() {
     <div class="not-found-inner">
       <canvas ref="canvas" class="pixel-canvas" />
 
-      <p class="tagline">
-        This page doesn't exist in the Tupper plane.
-      </p>
+      <p class="tagline">This page doesn't exist in the Tupper plane.</p>
 
       <p class="sub">
         But the <strong>k</strong> value for "404" does — you're looking at it right now, decoded
@@ -127,7 +125,9 @@ function goPlayground() {
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
 }
 
 .btn-primary:hover {
@@ -144,7 +144,9 @@ function goPlayground() {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .btn-secondary:hover {

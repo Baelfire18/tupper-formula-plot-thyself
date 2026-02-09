@@ -28,7 +28,7 @@ const people: Person[] = [
     initials: 'JB',
     role: 'Inspiration',
     description:
-      'Digital creator who uploads math reels to Instagram. One of his videos about Tupper\'s formula was the spark that started this whole project — proving that a short reel can inspire someone to build something.',
+      "Digital creator who uploads math reels to Instagram. One of his videos about Tupper's formula was the spark that started this whole project — proving that a short reel can inspire someone to build something.",
     photo: '/credits/joaquin_ig.jpg',
     link: JOAQUIN_INSTAGRAM,
     linkLabel: 'Instagram',
@@ -58,10 +58,20 @@ function onImgError(index: number) {
       <h1>Credits</h1>
       <p class="subtitle">The people behind this project.</p>
 
-      <div v-for="(person, i) in people" :key="person.name" class="person-section" :class="{ reversed: i % 2 === 1 }">
+      <div
+        v-for="(person, i) in people"
+        :key="person.name"
+        class="person-section"
+        :class="{ reversed: i % 2 === 1 }"
+      >
         <div class="person-photo">
           <a :href="person.link" target="_blank" rel="noopener">
-            <img v-if="!failedImages.has(i)" :src="person.photo" :alt="person.name" @error="onImgError(i)" />
+            <img
+              v-if="!failedImages.has(i)"
+              :src="person.photo"
+              :alt="person.name"
+              @error="onImgError(i)"
+            />
             <div v-else class="avatar-fallback">{{ person.initials }}</div>
           </a>
         </div>
@@ -140,7 +150,9 @@ h1 {
   object-fit: cover;
   border: 3px solid var(--border);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .person-photo img:hover,
@@ -163,7 +175,9 @@ h1 {
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 2px;
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 /* Text */
@@ -228,7 +242,6 @@ h1 {
 
 /* Mobile */
 @media (max-width: 700px) {
-
   .person-section,
   .person-section.reversed {
     flex-direction: column;

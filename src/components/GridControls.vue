@@ -216,7 +216,10 @@ function loadFromType(): void {
             <button
               class="btn-square"
               title="Set width = height (square grid)"
-              @click="widthInput = heightInput; applySize()"
+              @click="
+                widthInput = heightInput
+                applySize()
+              "
             >
               n×n
             </button>
@@ -235,12 +238,7 @@ function loadFromType(): void {
       <div class="size-row">
         <label>
           Height (n)
-          <input
-            v-model.number="heightInput"
-            type="number"
-            min="1"
-            :max="MAX_GRID_HEIGHT"
-          />
+          <input v-model.number="heightInput" type="number" min="1" :max="MAX_GRID_HEIGHT" />
         </label>
         <span class="width-hint">Width is inferred from k</span>
       </div>

@@ -8,20 +8,20 @@ import InfoCard from '../InfoCard.vue'
       <h2>Fun Facts 🤓</h2>
       <div class="card-grid">
         <InfoCard icon="🎯" title="Universal Bitmap Decoder">
-          The formula can plot <em>any</em> 106×17 bitmap. It's not picky — the "magic" is
-          picking the right k value.
+          The formula can plot <em>any</em> 106×17 bitmap. It's not picky — the "magic" is picking
+          the right k value.
         </InfoCard>
         <InfoCard icon="📏" title="543-Digit Number">
           The classic self-referential k is a 543-digit integer. That's a number with more digits
           than most people will ever see in their life.
         </InfoCard>
         <InfoCard icon="🌌" title="Infinite Gallery">
-          The Tupper plane is like the Library of Babel for images. The Mona Lisa, your name, a
-          cat — they're all in there at the right y-offset.
+          The Tupper plane is like the Library of Babel for images. The Mona Lisa, your name, a cat
+          — they're all in there at the right y-offset.
         </InfoCard>
         <InfoCard icon="📅" title="Published in 2001">
-          Jeff Tupper presented this at SIGGRAPH 2001. It was a footnote in a paper about
-          graphing — and became the most famous part.
+          Jeff Tupper presented this at SIGGRAPH 2001. It was a footnote in a paper about graphing —
+          and became the most famous part.
         </InfoCard>
       </div>
     </div>

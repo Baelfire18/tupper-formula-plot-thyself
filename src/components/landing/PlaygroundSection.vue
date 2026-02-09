@@ -6,9 +6,7 @@ import InfoCard from '../InfoCard.vue'
   <section class="playground-section" id="playground">
     <div class="section-inner">
       <h2>The Playground</h2>
-      <p class="section-desc">
-        Draw, encode, decode, and explore — all in one place.
-      </p>
+      <p class="section-desc">Draw, encode, decode, and explore — all in one place.</p>
 
       <!-- Steps -->
       <div class="steps">
@@ -170,7 +168,7 @@ import InfoCard from '../InfoCard.vue'
 
 /* Screenshot */
 .preview-frame {
-  max-width: 680px;
+  max-width: 400px;
   margin: 0 auto 40px;
   border-radius: 16px;
   overflow: hidden;

@@ -17,9 +17,9 @@ import InfoCard from '../InfoCard.vue'
           That's like a sentence that describes its own typesetting.
         </InfoCard>
         <InfoCard icon="♾️" title="Every Image Is In There">
-          The Tupper plane is infinite. Every possible pixel pattern — the Mona Lisa, your name,
-          a cat — already exists <em>somewhere</em> at the right y-offset. You just need to find
-          the right k.
+          The Tupper plane is infinite. Every possible pixel pattern — the Mona Lisa, your name, a
+          cat — already exists <em>somewhere</em> at the right y-offset. You just need to find the
+          right k.
         </InfoCard>
         <InfoCard icon="🎩" title="It's a Beautiful Trick">
           The formula doesn't "generate" images — it <em>reads bits</em> from a giant number. The

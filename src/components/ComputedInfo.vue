@@ -108,47 +108,59 @@ function downloadTXT(): void {
         <div class="k has-tip">
           N (packed)
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip">Your bitmap as one big integer. Each pixel = one bit, packed column-by-column, bottom
-            to top.</span>
+          <span class="tooltip"
+            >Your bitmap as one big integer. Each pixel = one bit, packed column-by-column, bottom
+            to top.</span
+          >
         </div>
         <div class="v mono">{{ nAbbr }}</div>
 
         <div class="k has-tip">
           k = n · N
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip">The y-axis position where the formula reproduces your drawing. This is the number that
-            makes Tupper's formula "plot" your bitmap.</span>
+          <span class="tooltip"
+            >The y-axis position where the formula reproduces your drawing. This is the number that
+            makes Tupper's formula "plot" your bitmap.</span
+          >
         </div>
         <div class="v mono">{{ kAbbr }}</div>
 
         <div class="k has-tip">
           y-range
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip">The vertical strip [k, k+n) on the y-axis. Graph the formula over this range to see
-            your bitmap.</span>
+          <span class="tooltip"
+            >The vertical strip [k, k+n) on the y-axis. Graph the formula over this range to see
+            your bitmap.</span
+          >
         </div>
         <div class="v mono">{{ yRange }}</div>
 
         <div class="k has-tip">
           bbox
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip">Bounding box (xMin, yMin, xMax, yMax) — the tightest rectangle around all "on" pixels,
-            in bottom-origin coords.</span>
+          <span class="tooltip"
+            >Bounding box (xMin, yMin, xMax, yMax) — the tightest rectangle around all "on" pixels,
+            in bottom-origin coords.</span
+          >
         </div>
         <div class="v mono">{{ bboxStr }}</div>
 
         <div class="k has-tip">
           center
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip">Center point (x, y) of the bounding box — the middle of your drawing within the
-            grid.</span>
+          <span class="tooltip"
+            >Center point (x, y) of the bounding box — the middle of your drawing within the
+            grid.</span
+          >
         </div>
         <div class="v mono">{{ centerStr }}</div>
 
         <div class="k has-tip">
           quadrant
           <button class="tip-icon" type="button">?</button>
-          <span class="tooltip">Which area of the grid the drawing is concentrated in, based on its center point.</span>
+          <span class="tooltip"
+            >Which area of the grid the drawing is concentrated in, based on its center point.</span
+          >
         </div>
         <div class="v mono">{{ tupper.result.quadrant }}</div>
       </div>
@@ -287,8 +299,8 @@ h3 {
   pointer-events: none;
 }
 
-.tip-icon:hover+.tooltip,
-.tip-icon:focus+.tooltip {
+.tip-icon:hover + .tooltip,
+.tip-icon:focus + .tooltip {
   display: block;
 }
 
