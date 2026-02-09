@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import InfoCard from '../InfoCard.vue'
+
+const previewImg = `${import.meta.env.BASE_URL}preview.png`
 </script>
 
 <template>
@@ -43,7 +45,7 @@ import InfoCard from '../InfoCard.vue'
 
       <!-- Screenshot -->
       <div class="preview-frame">
-        <img src="/preview.png" alt="Tupper Explorer Playground preview" />
+        <img :src="previewImg" alt="Tupper Explorer Playground preview" />
       </div>
 
       <!-- Features -->

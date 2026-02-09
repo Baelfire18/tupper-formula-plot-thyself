@@ -12,6 +12,8 @@ interface Person {
   linkLabel: string
 }
 
+const base = import.meta.env.BASE_URL
+
 const people: Person[] = [
   {
     name: 'Jose Antonio (Tony) Castro',
@@ -19,7 +21,7 @@ const people: Person[] = [
     role: 'Webpage Creator & Developer',
     description:
       'Software engineer based in Chile. Built this interactive explorer from scratch using Vue 3, TypeScript, and JavaScript BigInt — turning a fascinating mathematical concept into a playground anyone can enjoy.',
-    photo: '/credits/tony_linkedin.jpeg',
+    photo: `${base}credits/tony_linkedin.jpeg`,
     link: TONY_LINKEDIN,
     linkLabel: 'LinkedIn',
   },
@@ -29,7 +31,7 @@ const people: Person[] = [
     role: 'Inspiration',
     description:
       "Digital creator who uploads math reels to Instagram. One of his videos about Tupper's formula was the spark that started this whole project — proving that a short reel can inspire someone to build something.",
-    photo: '/credits/joaquin_ig.jpg',
+    photo: `${base}credits/joaquin_ig.jpg`,
     link: JOAQUIN_INSTAGRAM,
     linkLabel: 'Instagram',
   },
@@ -39,7 +41,7 @@ const people: Person[] = [
     role: 'The Mathematician',
     description:
       'Computer scientist and mathematician who presented this self-referential formula at SIGGRAPH 2001 in his paper "Reliable Two-Dimensional Graphing Methods for Mathematically Defined Curves and Surfaces." The paper was actually about reliable graphing methods — the formula that plots itself was just a small side demonstration within it. But that little curiosity ended up becoming far more famous than the paper itself.',
-    photo: '/credits/jeff.gif',
+    photo: `${base}credits/jeff.gif`,
     link: JEFF_PAGE,
     linkLabel: 'University Page',
   },
