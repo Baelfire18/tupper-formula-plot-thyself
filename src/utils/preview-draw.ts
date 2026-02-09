@@ -122,14 +122,11 @@ export function drawFittedPreview(o: FittedDrawOptions): void {
     }
   }
 
-  // "y ↑"
+  // "y ↑" (vertical, arrow pointing up)
   ctx.font = `bold ${fontSize}px ${MONO_FONT}`
-  ctx.save()
-  ctx.translate(14, FITTED_TOP_PAD + 16)
-  ctx.rotate(-Math.PI / 2)
-  ctx.textAlign = 'left'
-  ctx.fillText('y \u2191', 0, 0)
-  ctx.restore()
+  ctx.textAlign = 'center'
+  ctx.fillText('\u2191', 14, FITTED_TOP_PAD + 4)
+  ctx.fillText('y', 14, FITTED_TOP_PAD + 4 + fontSize + 2)
 
   // BBox
   if (bbox) drawBboxOverlay(ctx, bbox, n, cs, lp, FITTED_TOP_PAD)
@@ -330,11 +327,9 @@ export function drawExplorePreview(o: ExploreDrawOptions): void {
     }
   }
 
+  // "y ↑" (vertical, arrow pointing up)
   ctx.font = `bold ${fontSize}px ${MONO_FONT}`
-  ctx.save()
-  ctx.translate(14, TP + 16)
-  ctx.rotate(-Math.PI / 2)
-  ctx.textAlign = 'left'
-  ctx.fillText('y \u2191', 0, 0)
-  ctx.restore()
+  ctx.textAlign = 'center'
+  ctx.fillText('\u2191', 14, TP + 4)
+  ctx.fillText('y', 14, TP + 4 + fontSize + 2)
 }
