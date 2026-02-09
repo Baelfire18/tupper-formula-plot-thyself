@@ -101,6 +101,18 @@ The app will be available at `http://localhost:5174`.
 - **HTML Canvas API** (bitmap rendering)
 - **JavaScript BigInt** (arbitrary-precision arithmetic)
 
+## Deployment
+
+The app is currenlty been deployed automatically to **GitHub Pages** on every push to `master` via a GitHub Actions workflow (`.github/workflows/deploy.yml`).
+
+Live site: [https://baelfire18.github.io/tupper-formula-plot-thyself/](https://baelfire18.github.io/tupper-formula-plot-thyself/)
+
+To enable it on your own fork:
+
+1. Go to **Settings → Pages** in your GitHub repo
+2. Set **Source** to **GitHub Actions**
+3. Push to `master` — the workflow will build and deploy automatically
+
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).
