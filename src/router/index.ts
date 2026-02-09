@@ -25,10 +25,21 @@ const routes: RouteRecordRaw[] = [
   },
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior() {
     return { top: 0 }
   },
 })
+
+// Track page views for Google Analytics
+router.afterEach((to) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('config', 'G-13S3TJEY6W', {
+      page_path: to.fullPath,
+    })
+  }
+})
+
+export default router
